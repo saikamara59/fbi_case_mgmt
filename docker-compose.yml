@@ -15,11 +15,11 @@ services:
   db:
     image: postgres:14
     environment:
-      POSTGRES_DB: fbi_cases
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: fbi_case_mgmt
+      POSTGRES_USER: saidu
+      POSTGRES_PASSWORD: kamara12345
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 

@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
+
+
 from app.routes.auth_routes import auth_bp
 from app.routes.case_routes import case_bp
 from app.routes.face_routes import face_bp
