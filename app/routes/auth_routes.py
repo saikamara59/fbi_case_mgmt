@@ -47,9 +47,7 @@ def register():
 
     return jsonify({"message": "User registered", "user_id": user_id}), 201
 
-# -------------------
-# LOGIN
-# -------------------
+
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -67,19 +65,25 @@ def login():
         return jsonify({"error": "Invalid credentials"}), 401
 
     user_id, pw_hash = user
-    if not bcrypt.checkpw(password.encode('utf-8'), pw_hash.encode() if isinstance(pw_hash, str) else pw_hash):
+
+    if isinstance(pw_hash, memoryview):
+        pw_hash = pw_hash.tobytes()
+
+    if not bcrypt.checkpw(password.encode("utf-8"), pw_hash):
         return jsonify({"error": "Invalid credentials"}), 401
 
     token = jwt.encode(
         {
             "user_id": user_id,
-            "exp": datetime.utcnow() + timedelta(days=JWT_EXPIRATION)
+            "exp": datetime.utcnow() + timedelta(days=JWT_EXPIRATION),
         },
         JWT_SECRET,
-        algorithm="HS256"
+        algorithm="HS256",
     )
 
     return jsonify({"token": token, "user_id": user_id}), 200
+
+
 
 
 @auth_bp.route("/test-db")
