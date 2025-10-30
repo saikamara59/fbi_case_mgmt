@@ -13,15 +13,16 @@ def get_cases():
         cur.close()
         conn.close()
 
-        cases = []
-        for row in rows:
-            cases.append({
+        cases = [
+            {
                 "id": row[0],
                 "title": row[1],
-                "description": row[2],
-                "status": row[3],
+                "description": row[2] if row[2] else "No description provided",
+                "status": row[3] if row[3] else "unknown",
                 "created_at": row[4].isoformat() if row[4] else None
-            })
+            }
+            for row in rows
+        ]
         return jsonify(cases), 200
     except Exception as e:
         print("Error fetching cases:", e)
@@ -32,7 +33,7 @@ def create_case():
     try:
         data = request.get_json()
         title = data.get("title")
-        description = data.get("description")
+        description = data.get("description", "No description provided")
         status = data.get("status", "open")
 
         if not title:
