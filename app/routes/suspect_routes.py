@@ -50,6 +50,9 @@ suspect_bp = Blueprint("suspect_bp", __name__)
 def add_suspect():
     data = request.get_json()
     name = data.get("name")
+    age = data.get("age")
+    notes = data.get("notes")
+    case_id = data.get("case_id")
 
     if not name:
         return jsonify({"error": "Name is required"}), 400
@@ -58,8 +61,8 @@ def add_suspect():
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO suspects (name) VALUES (%s) RETURNING id",
-            (name,)
+            "INSERT INTO suspects (name, age, notes, case_id) VALUES (%s, %s, %s, %s) RETURNING id",
+            (name, age, notes, case_id)
         )
         new_id = cur.fetchone()[0]
         conn.commit()
