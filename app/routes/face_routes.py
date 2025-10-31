@@ -64,3 +64,29 @@ def match_face():
             })
 
     return jsonify({"matches": response}), 200
+
+from io import BytesIO
+import face_recognition
+
+def extract_face_encoding(image_bytes):
+    try:
+        # Wrap the bytes in a file-like object
+        image_file = BytesIO(image_bytes)
+        image = face_recognition.load_image_file(image_file)
+
+        # Debugging: Check if the image is loaded
+        print("Image loaded successfully. Shape:", image.shape)
+
+        # Detect face encodings
+        encodings = face_recognition.face_encodings(image)
+
+        # Debugging: Check if any faces are detected
+        if not encodings:
+            print("No faces detected in the image.")
+        else:
+            print(f"Number of faces detected: {len(encodings)}")
+
+        return encodings[0] if encodings else None
+    except Exception as e:
+        print("Error in extract_face_encoding:", e)
+        return None
